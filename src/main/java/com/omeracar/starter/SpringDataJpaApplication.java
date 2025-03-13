@@ -1,4 +1,4 @@
-package com.omeracar.starter;
+package com.omeracar;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 
 @EntityScan(basePackages = {"com.omeracar"})
+@ComponentScan(basePackages ={"com.omeracar"})
 @SpringBootApplication
 public class SpringDataJpaApplication {
 
