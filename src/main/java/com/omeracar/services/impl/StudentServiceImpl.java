@@ -46,37 +46,47 @@ public class StudentServiceImpl implements IStudentService {
     }
 
     @Override
-    public Student getStudentById(Integer id) {
+    public DtoStudent getStudentById(Integer id) {
+        DtoStudent dto =new DtoStudent();
         Optional<Student> optional = studentRepository.findById(id);
 
         if (optional.isPresent()) {
-            return optional.get();
-        }
+            Student dbStudent=optional.get();
 
-        return null;
+            BeanUtils.copyProperties(dbStudent,dto);
+        }
+        return dto;
     }
 
     @Override
     public void deleteStudentById(Integer id) {
-		Student dbStudent=getStudentById(id);
-        if (dbStudent!=null){
-            studentRepository.deleteById(id);
+        Optional<Student> optional=studentRepository.findById(id);
+		//DtoStudent dtoStudent=getStudentById(id);
+        if (optional!=null){
+            studentRepository.delete(optional.get());
         }else {
             System.out.println("student bulunamadi");
         }
     }
 
     @Override
-    public Student updateStudent(Integer id, Student updatedStudent) {
-        Student dbStudent=getStudentById(id);
-        if (dbStudent!=null){
-            dbStudent.setFirstName(updatedStudent.getFirstName());
-            dbStudent.setLastName(updatedStudent.getLastName());
-            dbStudent.setBirthOfDate(updatedStudent.getBirthOfDate());
+    public DtoStudent updateStudent(Integer id, DtoStudentIU dtoStudentIU) {
+        DtoStudent dto=new DtoStudent();
 
-            return studentRepository.save(dbStudent);
-        }
-        return null;
+		Optional<Student> optional=studentRepository.findById(id);
+        if (optional.isPresent()){
+            Student dbStudent=optional.get();
+
+            dbStudent.setFirstName(dbStudent.getFirstName());
+            dbStudent.setLastName(dbStudent.getLastName());
+            dbStudent.setBirthOfDate(dbStudent.getBirthOfDate());
+
+            Student updatedStudent=studentRepository.save(dbStudent);
+
+            BeanUtils.copyProperties(updatedStudent,dto);
+            return dto;
+
+        }else return null ;
     }
 
 
